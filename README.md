@@ -10,7 +10,7 @@ TBA
 
 ## Installation
 
-https://github.com/shimpfierie/another-editor
+You may either use VS Code's Live Preview or Github Pages. Live preview will require you to clone the repo: https://github.com/shimpfierie/code-quiz.
 
 ## Usage
 Technologies used:
