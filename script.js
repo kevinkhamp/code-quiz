@@ -1,163 +1,115 @@
-const playBtn = document.getElementById('play-btn');
-const questionContEl = document.getElementById('question-container');
-const questionEl = document.getElementById('question');
-const answerBtnEl = document.getElementById('answer-btn');
-let score = 0;
+const questionEl = document.querySelector('#question');
+const choices = Array.from(document.querySelectorAll('.answer-text'));
+const scoreText = document.querySelector('#score')
 
-let randomQuestion, currentQuestionIndex;
-
-playBtn.addEventListener('click', startGame);
-
-function startGame() {
-    console.log('It works!');
-    playBtn.classList.add('hide');
-    questionContEl = questions.sort(() => Math.random() = .5)
-    currentQuestionIndex = 0
-    questionContEl.classList.remove('hide');
-    setNextQuestion();
-}
-
-function setNextQuestion() {
-    resetState();
-    showQuestion(randomQuestion[currentQuestionIndex]);
-
-}
-
-function showQuestion(question) {
-    resetState()
-    questionEl.innerText = question.question;
-    question.answers.forEach(answer => {
-        const button = document.createElement('button');
-        button.innerText = answer.text;
-        button.classList.add('btn');
-
-        if (answer.correct) {
-            button.dataset.correct = answer.correct;
-        }
-        button.addEventListener('click', selectedAnswer);
-        answerBtnEl.appendChild(button);
-    })
-}
-
-function resetState() {
-    while (answerBtnEl.firstChild) {
-        answerBtnEl.removeChild(answerBtnEl.firstChild);
-    }
-}
-
-function selectedAnswer(event) {
-    const selectedBtn = event.target;
-    const correct = selectedBtn.dataset.correct;
-
-    setStatusClass(document.body, correct);
-    Array.from(answerBtnEl.children).forEach(button => {setStatusClass(button, button.dataset.correct)
-    });
-}
-
-function setStatusClass(element, correct) {
-    clearStatusClass(element);
-    if (correct) {
-        element.classList.add('correct');
-
-    }
-    else {
-        element.classList.add('incorrect');
-    }
-}
-
-function clearStatusClass(element) {
-    element.classList.remove('correct');
-    element.classList.remove('incorrect');
-}
+let currentQuestionIndex = {}
+let acceptingAnswers = true
+let score = 0
+let questionsCounter = 0
+let availableQuestions = []
 
 const questions = [
     {
         question: 'Who was the pilot of the Eva-01?',
-        answers: [
-            {
-                text: 'Shinji',
-                correct: true
-            }, {
-                text: 'Ryuku',
-                correct: false
-            }, {
-                text: 'Asuna',
-                correct: false
-            }, {
-                text: 'Ren',
-                correct: false
-            },
-        ]
+        choice1: 'Shinji',
+        choice2: 'Ryuku',
+        choice3: 'Asuna',
+        choice4: 'Ren',
+        answer: 1,
+        
     },
     {
         question: 'What does the fox say?',
-        answers: [
-            {
-                text: 'womp womp wompapow',
-                correct: false
-            }, {
-                text: 'ring ding ding ding',
-                correct: true
-            }, {
-                text: 'owowowowow',
-                correct: false
-            }, {
-                text: 'ayayayayay',
-                correct: false
-            },
-        ]
+        choice1: 'womp womp wompapow',
+        choice2: 'ring ding ding ding',
+        choice3: 'owowowowow',
+        choice4: 'ayayayayay',
+        answer: 2,
     },
     {
         question: 'What does honk shoo mean?',
-        answers: [
-            {
-                text: 'Dazed',
-                correct: false
-            }, {
-                text: 'Confused',
-                correct: false
-            }, {
-                text: 'Impatient',
-                correct: true
-            }, {
-                text: 'Sleepy',
-                correct: false
-            },
-        ]
+        choice1: 'Dazed',
+        choice2: 'Confused',
+        choice3: 'Impatient',
+        choice4: 'Sleepy',
+        answer: 4,
     },
     {
         question: 'What should I eat tomorrow?',
-        answers: [
-            {
-                text: 'Sushi',
-                correct: true
-            }, {
-                text: 'Sushi',
-                correct: true
-            }, {
-                text: 'Sushi',
-                correct: true
-            }, {
-                text: 'Sushi',
-                correct: true
-            },
-        ]
+        choice1: 'Sushi',
+        choice2: 'Pho',
+        choice3: 'PBR',
+        choice4: 'Rocks',
+        answer: 1
     }, {
         question: 'Why are we still here?',
-        answers: [
-            {
-                text: 'Just to suffer',
-                correct: true
-            }, {
-                text: 'Every night',
-                correct: false
-            }, {
-                text: 'I can feel my leg and my arm',
-                correct: false
-            }, {
-                text: 'even my fingers',
-                correct: false
-            },
-        ]
+        choice1: 'Just to suffer',
+        choice2: 'Every night',
+        choice3: 'I can feel my leg and my arm',
+        choice4: 'even my fingers',
+        answer: 1,
     }
-];
+]
+
+const SCORE_POINTS = 25
+const MAX_QUESTIONS = 4
+
+startGame = () => {
+    questionsCounter = 0
+    score = 0
+    availableQuestions = [...questions]
+    getNewQuestion()
+}
+
+getNewQuestion = () => {
+    if(availableQuestions.length === 0 || questionsCounter > MAX_QUESTIONS) {
+        localStorage.setItem('recentScore', score)
+
+        return window.location.assign('./end.html')
+    }
+
+    questionsCounter++
+    
+    const questionsIndex = Math.floor(Math.random() * availableQuestions.length)
+    currentQuestionIndex = availableQuestions[questionsIndex]
+    questionEl.innerText = currentQuestionIndex.question
+
+    choices.forEach(choice => {
+        const number = choice.dataset['number']
+        choice.innerText = currentQuestionIndex['choice'+number]
+    })
+
+    availableQuestions.splice(questionsIndex, 1)
+
+    acceptingAnswers = true
+}
+
+choices.forEach(choice => {
+    choice.addEventListener('click', e => {
+        if(!acceptingAnswers) return
+
+        acceptingAnswers = false
+        const selectedChoice = e.target
+        const selectedAnswer = selectedChoice.dataset['number']
+
+        let classToApply = selectedAnswer == currentQuestionIndex.answer ? 'correct' : 'incorrect'
+
+        if (classToApply === 'correct') {
+            incrementScore(SCORE_POINTS)
+        }
+
+        selectedChoice.parentElement.classList.add(classToApply)
+
+        setTimeout(() => {
+            selectedChoice.parentElement.classList.remove(classToApply)
+            getNewQuestion()
+        }, 1000)
+    })
+})
+
+incrementScore = num => {
+    score += num
+    scoreText.innerText = score
+}
+
+startGame()
