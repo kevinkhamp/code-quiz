@@ -7,6 +7,9 @@ This is a program is a quiz to test your knowledge of internet culture.
 ## Visuals
 
 ![1](https://github.com/shimpfierie/code-quiz/blob/main/1.PNG)
+![2](https://github.com/shimpfierie/code-quiz/blob/main/2.PNG)
+![3](https://github.com/shimpfierie/code-quiz/blob/main/3.PNG)
+![4](https://github.com/shimpfierie/code-quiz/blob/main/4.PNG)
 
 ## Installation
 
