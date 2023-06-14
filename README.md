@@ -15,6 +15,8 @@ This is a program is a quiz to test your knowledge of internet culture.
 
 You may either use VS Code's Live Preview or Github Pages. Live preview will require you to clone the repo: https://github.com/shimpfierie/code-quiz.
 
+I have no good experiences with Github Pages. You may have to change the source from "Deploy from a branch" to "Github Actions." I personally recommend Live Preview.
+
 ## Usage
 Technologies used:
 ```
